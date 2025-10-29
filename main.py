@@ -5,34 +5,52 @@ from sympy import symbols, Eq, solve
 import matplotlib.animation as animation
 
 dt=0.03
-t=10
+t=20
 frames = int(t//dt)
-m = 10
+m1 = 10
+m2 = 10
 l = 1
 L = 2 * l
-x=[]
-y=[]
+x1=[]
+y1=[]
+x2=[]
+y2=[]
 g = 9.81
 n=0.1
 R=1
 
-o=radians(60)
+o1=radians(90)
+o2=radians(135)
 
 def calc():
-    w=0
-    global x,y,m,g,o,frames,dt,l,n,R
+    w1=0
+    w2=0
+    global x1,y1,m1,o1,g,frames,dt,l,n,R
+    global x2,y2,m2,o2
 
     j=-1
     while(j<frames):
-        a=-g * sin(o) / l - 6*pi*n*R*w/m
-        w+=a*dt
-        o+=w*dt
+        # a=-g * sin(o) / l - 6*pi*n*R*w/m
+        a1=-g * sin(o1) / l
+        w1+=a1*dt
+        o1+=w1*dt
 
-        curx=l*sin(o)
-        cury=-l*cos(o)
-        
-        x.append(curx)
-        y.append(cury)
+        a2=-g * sin(o2) / l
+        w2+=a2*dt
+        o2+=w2*dt
+
+        curx1=l*sin(o1)
+        cury1=-l*cos(o1)
+
+        curx2=curx1 + l*sin(o2)
+        cury2=cury1 - l*cos(o2)
+
+
+        x1.append(curx1)
+        y1.append(cury1)
+
+        x2.append(curx2)
+        y2.append(cury2)
 
         j+=1
 calc()
@@ -49,11 +67,11 @@ time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
 
 
 def animate(i):
-    thisx = [0, x[i]]
-    thisy = [0, y[i]]
+    thisx = [0, x1[i], x2[i]]
+    thisy = [0, y1[i], y2[i]]
 
-    history_x = x[:i]
-    history_y = y[:i]
+    history_x = x2[:i]
+    history_y = y2[:i]
 
     line.set_data(thisx, thisy)
     trace.set_data(history_x, history_y)
@@ -65,5 +83,5 @@ ani = animation.FuncAnimation(
     fig, animate, frames, interval=dt*1000, blit=True)
 
 writer = animation.PillowWriter(fps=30,bitrate=1800)
-ani.save('drag.gif', writer=writer)
+ani.save('doublesimple.gif', writer=writer)
 # plt.show()
