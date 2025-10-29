@@ -1,28 +1,30 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from math import cos, sin, pi, radians, atan
+from math import cos, sin, pi, radians, atan, floor
 from sympy import symbols, Eq, solve
 import matplotlib.animation as animation
 
-frames = 5000
+dt=0.03
+t=10
+frames = int(t//dt)
 m = 10
 l = 1
 L = 2 * l
-dt=0.01
-
 x=[]
 y=[]
 g = 9.81
+n=0.1
+R=1
 
 o=radians(60)
 
 def calc():
     w=0
-    global x,y,m,g,o,frames,dt,l
+    global x,y,m,g,o,frames,dt,l,n,R
 
     j=-1
     while(j<frames):
-        a=-g * sin(o) / l
+        a=-g * sin(o) / l - 6*pi*n*R*w/m
         w+=a*dt
         o+=w*dt
 
@@ -62,8 +64,6 @@ def animate(i):
 ani = animation.FuncAnimation(
     fig, animate, frames, interval=dt*1000, blit=True)
 
-# writer = animation.PillowWriter(fps=30,
-#                                 metadata=dict(artist='Me'),
-#                                 bitrate=1800)
-# ani.save('chaos.gif', writer=writer)
-plt.show()
+writer = animation.PillowWriter(fps=30,bitrate=1800)
+ani.save('drag.gif', writer=writer)
+# plt.show()
